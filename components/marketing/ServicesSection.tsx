@@ -81,21 +81,45 @@ export function ServicesSection() {
     <section id="servicios" className="py-16 md:py-24 bg-gray-50 scroll-mt-16 md:scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
             Soluciones diseñadas para ti
-          </h2>
-          <p className="text-lg md:text-xl text-gray-600">
+          </motion.h2>
+          <motion.p
+            className="text-lg md:text-xl text-gray-600"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
             ¿Con cuál te identificas?
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Primary Tabs - Horizontal buttons on both mobile and desktop */}
-        <div className="mb-8">
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
           {/* Desktop */}
           <div className="hidden md:flex justify-center gap-4">
-            {categories.map((category) => (
-              <button
+            {categories.map((category, index) => (
+              <motion.button
                 key={category.id}
                 onClick={() => handlePrimaryChange(category.id)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
@@ -103,17 +127,23 @@ export function ServicesSection() {
                     ? 'bg-accent text-white shadow-lg'
                     : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                 }`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.7 + index * 0.1, duration: 0.4 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <DynamicIcon name={category.icon || 'Code'} className="w-5 h-5" />
                 {category.name}
-              </button>
+              </motion.button>
             ))}
           </div>
 
           {/* Mobile - Buttons Grid */}
           <div className="md:hidden grid grid-cols-2 gap-3">
-            {categories.map((category) => (
-              <button
+            {categories.map((category, index) => (
+              <motion.button
                 key={category.id}
                 onClick={() => handlePrimaryChange(category.id)}
                 className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-all duration-300 ${
@@ -121,13 +151,18 @@ export function ServicesSection() {
                     ? 'bg-accent text-white shadow-lg'
                     : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                 }`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.7 + index * 0.1, duration: 0.4 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <DynamicIcon name={category.icon || 'Code'} className="w-5 h-5" />
                 <span className="text-sm">{category.name}</span>
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Content Area */}
         {currentPrimaryCategory && (
@@ -136,10 +171,16 @@ export function ServicesSection() {
             {secondaryCategories.length > 0 ? (
               <>
                 {/* Desktop - Vertical Tabs with Icons */}
-                <div className="hidden md:block md:col-span-4 lg:col-span-3">
+                <motion.div
+                  className="hidden md:block md:col-span-4 lg:col-span-3"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
                   <div className="space-y-2">
-                    {secondaryCategories.map((secondary) => (
-                      <button
+                    {secondaryCategories.map((secondary, index) => (
+                      <motion.button
                         key={secondary.id}
                         onClick={() => setSelectedSecondary(secondary.id)}
                         className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg transition-all duration-300 ${
@@ -147,13 +188,19 @@ export function ServicesSection() {
                             ? 'bg-accent text-white shadow-md'
                             : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                         }`}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1, duration: 0.4 }}
+                        whileHover={{ x: 5, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         <DynamicIcon name={secondary.icon || 'Code'} className="w-5 h-5 flex-shrink-0" />
                         <span>{secondary.name}</span>
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Content Panel with Mobile Secondary Tabs */}
                 <div className="md:col-span-8 lg:col-span-9 relative">
@@ -186,27 +233,27 @@ export function ServicesSection() {
                         transition={{ duration: 0.3 }}
                         className="bg-white rounded-xl p-6 md:p-8 shadow-lg pr-16 md:pr-8"
                       >
-                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
                           {currentSecondaryCategory.name}
                         </h3>
 
                         {currentSecondaryCategory.callout && (
                           <div className="mb-4 p-4 bg-accent/10 border-l-4 border-accent rounded-r-lg">
-                            <p className="text-lg font-semibold text-accent-dark">
+                            <p className="text-md font-semibold text-accent-dark text-justify mr-2">
                               {currentSecondaryCategory.callout}
                             </p>
                           </div>
                         )}
 
                         <div className="prose prose-lg max-w-none mb-6">
-                          <p className="text-gray-600">
+                          <p className="text-gray-600 text-justify mr-2">
                             {currentSecondaryCategory.description}
                           </p>
                         </div>
 
                         {currentSecondaryCategory.demo_slug && (
                           <Link href={`/demos/${currentSecondaryCategory.demo_slug}`}>
-                            <Button className='bg-secondary text-dark hover:bg-accent-light'>Ver Demo</Button>
+                            <Button className='bg-gray-700 text-gray-50 hover:bg-gray-500'>Ver Demo</Button>
                           </Link>
                         )}
                       </motion.div>

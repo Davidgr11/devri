@@ -128,31 +128,64 @@ export function ContactSection() {
     <section id="contacto" className="py-16 md:py-24 bg-gray-50 scroll-mt-16 md:scroll-mt-20">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
             Cuéntanos sobre tu proyecto
-          </h2>
-          <p className="text-lg text-gray-600">
+          </motion.h2>
+          <motion.p
+            className="text-lg text-gray-600"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
             Responde unas preguntas y te contactamos
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>Pregunta {currentStep + 1} de {steps.length}</span>
             <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-accent h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+            <motion.div
+              className="bg-accent h-2 rounded-full"
+              initial={{ width: "0%" }}
+              animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
+        <motion.form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white rounded-2xl p-6 md:p-8 shadow-lg"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -202,34 +235,63 @@ export function ContactSection() {
           </AnimatePresence>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-4 mt-8">
+          <motion.div
+            className="flex gap-4 mt-8"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+          >
             {!isFirstStep && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handlePrevious}
-                className="flex items-center gap-2"
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <ChevronLeft className="w-4 h-4" />
-                Anterior
-              </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handlePrevious}
+                  className="flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Anterior
+                </Button>
+              </motion.div>
             )}
 
             <div className="flex-1" />
 
             {isLastStep ? (
-              <Button type="submit" isLoading={isSubmitting} className="flex items-center gap-2">
-                Enviar mensaje
-                <Check className="w-4 h-4" />
-              </Button>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button type="submit" isLoading={isSubmitting} className="flex items-center gap-2">
+                  Enviar mensaje
+                  <Check className="w-4 h-4" />
+                </Button>
+              </motion.div>
             ) : (
-              <Button type="button" onClick={handleNext} className="flex items-center gap-2">
-                Siguiente
-                <ChevronRight className="w-4 h-4" />
-              </Button>
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button type="button" onClick={handleNext} className="flex items-center gap-2">
+                  Siguiente
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </motion.div>
             )}
-          </div>
-        </form>
+          </motion.div>
+        </motion.form>
       </div>
     </section>
   );

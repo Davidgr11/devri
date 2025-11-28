@@ -61,8 +61,8 @@ export function Footer() {
             <span className="hidden sm:inline">DEVRI</span>
             <span className="sm:hidden">DEVRI</span>
           </Link>
-            <p className="text-gray-400 leading-relaxed mt-4">
-              Transformamos tu negocio con tecnología. Creamos sitios web y sistemas digitales que impulsan tu crecimiento.
+            <p className="text-gray-400 leading-relaxed mt-4 text-justify">
+              Aceleramos tu negocio con tecnología y soluciones innovadoras. Agencia de desarrollo de software, marketing y consultoría digital.
             </p>
           </div>
 

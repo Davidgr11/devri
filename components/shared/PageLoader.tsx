@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 export function PageLoader() {
   const [isLoading, setIsLoading] = useState(true);
@@ -68,6 +69,15 @@ export function PageLoader() {
               transition={{ duration: 0.5 }}
               className="text-center"
             >
+              <div className="w-16 h-20 md:w-12 md:h-12 relative transition-transform group-hover:scale-105 mb-2 mx-auto">
+              <Image
+                src="/devri-logo-dark.svg"
+                alt="Devri Solutions Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent via-secondary to-accent bg-clip-text text-transparent mb-2">
                 DEVRI
               </h1>

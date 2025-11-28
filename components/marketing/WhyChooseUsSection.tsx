@@ -6,6 +6,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Zap, Shield, Headphones, Sparkles, DollarSign, CheckCircle, Play } from 'lucide-react';
 import { getTestimonials } from '@/lib/supabase/queries';
 import { TestimonialsCarousel } from './TestimonialsCarousel';
@@ -63,80 +64,154 @@ export function WhyChooseUsSection() {
     <section id="por-que-elegirnos" className="py-16 md:py-24 bg-white scroll-mt-16 md:scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
             ¿Por qué elegirnos?
-          </h2>
-        </div>
+          </motion.h2>
+        </motion.div>
 
         {/* Benefits Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-16">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
-              <div
+              <motion.div
                 key={index}
-                className="bg-gray-900 rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+                className="bg-gray-900 rounded-xl p-6 cursor-pointer group"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
+                <motion.div
+                  className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <Icon className="w-6 h-6 text-secondary group-hover:text-gray-900 transition-colors" />
-                </div>
+                </motion.div>
                 <h3 className="text-lg font-semibold text-gray-50 mb-2">
                   {benefit.title}
                 </h3>
                 <p className="text-gray-400">{benefit.description}</p>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* YouTube Video */}
-        <div className="mb-16">
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h3
+            className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
             Somos tu aliado digital
-          </h3>
-          <div className="max-w-4xl mx-auto">
+          </motion.h3>
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
             {!showVideo ? (
-              <div
+              <motion.div
                 className="relative aspect-video bg-gray-200 rounded-xl overflow-hidden cursor-pointer group"
                 onClick={() => setShowVideo(true)}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                  <div className="w-20 h-20 bg-accent rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <motion.div
+                    className="w-20 h-20 bg-accent rounded-full flex items-center justify-center"
+                    whileHover={{ scale: 1.2 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
                     <Play className="w-10 h-10 text-white ml-1" />
-                  </div>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div className="aspect-video rounded-xl overflow-hidden">
+              <motion.div
+                className="aspect-video rounded-xl overflow-hidden"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+              >
                 <iframe
                   src={videoUrl}
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-              </div>
+              </motion.div>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Testimonials */}
         {testimonials.length > 0 && (
-          <div className="mb-16">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">
+          <motion.div
+            className="mb-16"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <motion.h3
+              className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
               Lo que dicen nuestros clientes
-            </h3>
+            </motion.h3>
             <TestimonialsCarousel testimonials={testimonials} />
-          </div>
+          </motion.div>
         )}
 
         {/* Process Timeline */}
-        <div>
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h3
+            className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
             Nuestro proceso
-          </h3>
+          </motion.h3>
           <ProcessTimeline />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
