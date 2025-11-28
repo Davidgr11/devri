@@ -113,7 +113,7 @@ export function WhyChooseUsSection() {
           })}
         </div>
 
-        {/* YouTube Video */}
+        {/* YouTube Video Sample*/}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 40 }}
