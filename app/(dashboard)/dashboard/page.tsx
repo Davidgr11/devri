@@ -114,7 +114,7 @@ export default function DashboardPage() {
                   <span className="font-semibold text-gray-900">Sitio publicado</span>
                 </div>
                 <a
-                  href={website.url}
+                  href={website.url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent hover:underline flex items-center gap-1 mb-4"
@@ -172,7 +172,7 @@ export default function DashboardPage() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Uptime</p>
+                    <p className="text-sm text-gray-600 mb-1">Disponibilidad</p>
                     <p className="text-2xl font-bold text-green-600">99.9%</p>
                   </div>
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                     <Zap className="w-6 h-6 text-accent" />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Tiempo de carga promedio</p>
+                <p className="text-xs text-gray-500 mt-2">Tiempo de carga óptimo</p>
               </CardContent>
             </Card>
 
@@ -202,14 +202,14 @@ export default function DashboardPage() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Visitas del mes</p>
-                    <p className="text-2xl font-bold text-gray-900">1,234</p>
+                    <p className="text-sm text-gray-600 mb-1">Respaldos</p>
+                    <p className="text-2xl font-bold text-gray-700">Al día</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                     <Globe className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">+12% vs mes anterior</p>
+                <p className="text-xs text-gray-500 mt-2">Tu sitio está guardado correctamente</p>
               </CardContent>
             </Card>
           </div>

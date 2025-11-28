@@ -36,12 +36,12 @@ export async function getServiceCategories() {
   if (!data) return [];
 
   // Organize into hierarchy
-  const primaryCategories = data.filter((cat) => cat.type === 'primary');
-  const secondaryCategories = data.filter((cat) => cat.type === 'secondary');
+  const primaryCategories = (data as any).filter((cat: any) => cat.type === 'primary');
+  const secondaryCategories = (data as any).filter((cat: any) => cat.type === 'secondary');
 
-  return primaryCategories.map((primary) => ({
+  return primaryCategories.map((primary: any) => ({
     ...primary,
-    children: secondaryCategories.filter((sec) => sec.parent_id === primary.id),
+    children: secondaryCategories.filter((sec: any) => sec.parent_id === primary.id),
   }));
 }
 
@@ -58,7 +58,7 @@ export async function getSubscriptionPlans() {
     .order('order_index');
 
   if (error) throw error;
-  return data as SubscriptionPlan[];
+  return data as unknown as SubscriptionPlan[];
 }
 
 /**
@@ -77,7 +77,7 @@ export async function getFAQs() {
     console.error('Error loading FAQs:', error);
     return [];
   }
-  return data as FAQ[] || [];
+  return data as unknown as FAQ[] || [];
 }
 
 /**
@@ -96,7 +96,7 @@ export async function getTestimonials() {
     console.error('Error loading testimonials:', error);
     return [];
   }
-  return data as Testimonial[] || [];
+  return data as unknown as Testimonial[] || [];
 }
 
 /**
@@ -115,7 +115,7 @@ export async function getClientLogos() {
     console.error('Error loading client logos:', error);
     return [];
   }
-  return data as ClientLogo[] || [];
+  return data as unknown as ClientLogo[] || [];
 }
 
 /**
@@ -131,7 +131,7 @@ export async function getSiteConfig(key: string) {
     .single();
 
   if (error) throw error;
-  return data?.value;
+  return (data as any)?.value;
 }
 
 /**
@@ -147,7 +147,7 @@ export async function getUserProfile(userId: string) {
     .single();
 
   if (error) throw error;
-  return data as UserProfile;
+  return data as unknown as UserProfile;
 }
 
 /**
@@ -163,7 +163,7 @@ export async function getUserRole(userId: string) {
     .single();
 
   if (error) return 'client'; // Default to client if no role found
-  return data.role;
+  return (data as any).role;
 }
 
 /**
@@ -198,7 +198,7 @@ export async function getUserWebsite(userId: string) {
     .single();
 
   if (error && error.code !== 'PGRST116') throw error;
-  return data as ClientWebsite | null;
+  return data as unknown as ClientWebsite | null;
 }
 
 /**
@@ -231,5 +231,5 @@ export async function updateUserProfile(userId: string, updates: Partial<UserPro
     .single();
 
   if (error) throw error;
-  return data as UserProfile;
+  return data as unknown as UserProfile;
 }

@@ -25,12 +25,13 @@ export default function AdminContactFormsPage() {
     const supabase = createClient();
 
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('contact_forms')
         .select('*')
         .order('created_at', { ascending: false });
 
-      setForms(data || []);
+      if (error) throw error;
+      setForms((data as unknown as ContactForm[]) || []);
     } catch (error) {
       console.error('Error loading contact forms:', error);
     } finally {

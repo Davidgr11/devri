@@ -104,7 +104,7 @@ export function ServicesSection() {
                     : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                 }`}
               >
-                <DynamicIcon name={category.icon} className="w-5 h-5" />
+                <DynamicIcon name={category.icon || 'Code'} className="w-5 h-5" />
                 {category.name}
               </button>
             ))}
@@ -122,7 +122,7 @@ export function ServicesSection() {
                     : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                 }`}
               >
-                <DynamicIcon name={category.icon} className="w-5 h-5" />
+                <DynamicIcon name={category.icon || 'Code'} className="w-5 h-5" />
                 <span className="text-sm">{category.name}</span>
               </button>
             ))}
@@ -148,7 +148,7 @@ export function ServicesSection() {
                             : 'bg-gray-200 text-gray-700 hover:bg-secondary'
                         }`}
                       >
-                        <DynamicIcon name={secondary.icon} className="w-5 h-5 flex-shrink-0" />
+                        <DynamicIcon name={secondary.icon || 'Code'} className="w-5 h-5 flex-shrink-0" />
                         <span>{secondary.name}</span>
                       </button>
                     ))}
@@ -170,7 +170,7 @@ export function ServicesSection() {
                         }`}
                         title={secondary.name}
                       >
-                        <DynamicIcon name={secondary.icon} className="w-5 h-5" />
+                        <DynamicIcon name={secondary.icon || 'Code'} className="w-5 h-5" />
                       </button>
                     ))}
                   </div>

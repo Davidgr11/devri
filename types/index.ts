@@ -150,9 +150,21 @@ export interface ClientLogo {
 
 // ========== SITE CONFIG ==========
 export interface SiteConfig {
+  id?: string;
   key: string;
   value: any; // JSONB
   updated_at: string;
+  contact_email?: string;
+  contact_phone?: string;
+  contact_whatsapp?: string;
+  contact_address?: string;
+  social_facebook?: string;
+  social_instagram?: string;
+  social_twitter?: string;
+  social_linkedin?: string;
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
 }
 
 export interface ContactInfo {

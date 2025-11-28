@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user email
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('full_name')
       .eq('id', user.id)
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       metadata: {
         userId: user.id,
         planId: planId,
-        userName: profile?.full_name || '',
+        userName: profileError ? '' : (profile as any)?.full_name || '',
       },
     });
 

@@ -106,7 +106,6 @@ export default function ProfilePage() {
               type="text"
               error={errors.full_name?.message}
               fullWidth
-              icon={<User className="w-5 h-5" />}
             />
 
             {/* Email (read-only) */}
@@ -133,7 +132,6 @@ export default function ProfilePage() {
               type="tel"
               error={errors.phone?.message}
               fullWidth
-              icon={<Phone className="w-5 h-5" />}
               placeholder="55 1234 5678"
             />
 

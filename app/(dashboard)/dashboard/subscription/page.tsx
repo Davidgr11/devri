@@ -194,10 +194,9 @@ export default function SubscriptionPage() {
                   {subscription.plan.name}
                 </h3>
                 <p className="text-3xl font-bold text-accent mb-2">
-                  {formatCurrency(subscription.plan.price)}
+                  {formatCurrency(subscription.plan.price_mxn)}
                   <span className="text-lg text-gray-600 font-normal">/mes</span>
                 </p>
-                <p className="text-gray-600">{subscription.plan.description}</p>
               </div>
 
               {/* Billing Info */}
@@ -267,11 +266,10 @@ export default function SubscriptionPage() {
                   <Card key={plan.id} hover>
                     <CardContent className="pt-6">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                      <p className="text-2xl font-bold text-accent mb-3">
-                        {formatCurrency(plan.price)}
+                      <p className="text-2xl font-bold text-accent mb-4">
+                        {formatCurrency(plan.price_mxn)}
                         <span className="text-sm text-gray-600 font-normal">/mes</span>
                       </p>
-                      <p className="text-sm text-gray-600 mb-4">{plan.description}</p>
                       <ul className="space-y-2 mb-6">
                         {plan.features.slice(0, 3).map((feature, index) => (
                           <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
@@ -329,11 +327,10 @@ export default function SubscriptionPage() {
                   <Card key={plan.id} hover>
                     <CardContent className="pt-6">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                      <p className="text-3xl font-bold text-accent mb-3">
+                      <p className="text-3xl font-bold text-accent mb-4">
                         {formatCurrency(plan.price_mxn)}
                         <span className="text-sm text-gray-600 font-normal">/mes</span>
                       </p>
-                      <p className="text-sm text-gray-600 mb-4">{plan.description}</p>
                       <ul className="space-y-2 mb-6">
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2 text-sm text-gray-700">

@@ -66,7 +66,7 @@ export default function WebsitePage() {
                   URL del sitio
                 </label>
                 <a
-                  href={website.url}
+                  href={website.url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-accent hover:underline text-lg font-semibold"
@@ -101,13 +101,12 @@ export default function WebsitePage() {
                     Plan actual
                   </label>
                   <p className="text-gray-900 font-semibold">{subscription.plan.name}</p>
-                  <p className="text-sm text-gray-600 mt-1">{subscription.plan.description}</p>
                 </div>
               )}
 
               {/* Visit Button */}
               <div className="pt-4">
-                <a href={website.url} target="_blank" rel="noopener noreferrer">
+                <a href={website.url || '#'} target="_blank" rel="noopener noreferrer">
                   <Button className="flex items-center gap-2">
                     <Globe className="w-4 h-4" />
                     Visitar mi sitio web

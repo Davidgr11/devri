@@ -66,6 +66,48 @@ export default function AdminClientsPage() {
     }
   };
 
+  const handleEditWebsite = (clientId: string, currentUrl?: string) => {
+    setEditingWebsite(clientId);
+    setEditUrl(currentUrl || '');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingWebsite(null);
+    setEditUrl('');
+  };
+
+  const handleSaveWebsite = async (userId: string) => {
+    if (!editUrl.trim()) {
+      alert('Por favor ingresa una URL válida');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const response = await fetch(`/api/admin/websites/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: editUrl,
+          status: 'published',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update website');
+      }
+
+      await loadClients();
+      setEditingWebsite(null);
+      setEditUrl('');
+    } catch (error) {
+      console.error('Error updating website:', error);
+      alert('Error al actualizar el sitio web');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isLoading) {
     return <Loading text="Cargando clientes..." />;
   }
@@ -107,14 +149,17 @@ export default function AdminClientsPage() {
       {/* Search */}
       <Card>
         <CardContent className="pt-6">
-          <Input
-            type="text"
-            placeholder="Buscar por nombre o email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<Search className="w-5 h-5" />}
-            fullWidth
-          />
+          <div className="relative">
+            <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Buscar por nombre o email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+              fullWidth
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -137,6 +182,9 @@ export default function AdminClientsPage() {
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
                       Suscripción
+                    </th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                      Sitio Web
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
                       Registro
@@ -174,6 +222,66 @@ export default function AdminClientsPage() {
                           </div>
                         ) : (
                           <Badge variant="default">Sin suscripción</Badge>
+                        )}
+                      </td>
+                      <td className="py-4 px-4">
+                        {editingWebsite === client.id ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="url"
+                              value={editUrl}
+                              onChange={(e) => setEditUrl(e.target.value)}
+                              placeholder="https://ejemplo.com"
+                              className="text-sm"
+                              disabled={isSaving}
+                            />
+                            <Button
+                              size="sm"
+                              onClick={() => handleSaveWebsite(client.id)}
+                              disabled={isSaving}
+                            >
+                              <Check className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={handleCancelEdit}
+                              disabled={isSaving}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ) : client.website_url && client.website_status === 'published' ? (
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge variant="success">Publicado</Badge>
+                              <button
+                                onClick={() => handleEditWebsite(client.id, client.website_url)}
+                                className="text-gray-400 hover:text-gray-600"
+                              >
+                                <Edit2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                            <a
+                              href={client.website_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-accent hover:underline flex items-center gap-1"
+                            >
+                              {client.website_url.replace(/^https?:\/\//, '')}
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => handleEditWebsite(client.id)}
+                            disabled={client.subscription_status !== 'active'}
+                          >
+                            <Globe className="w-4 h-4 mr-1" />
+                            Asignar sitio
+                          </Button>
                         )}
                       </td>
                       <td className="py-4 px-4">

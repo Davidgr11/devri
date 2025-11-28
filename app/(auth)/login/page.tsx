@@ -44,14 +44,14 @@ export default function LoginPage() {
 
       if (authData.user) {
         // Check user role
-        const { data: roleData } = await supabase
+        const { data: roleData, error: roleError } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', authData.user.id)
           .single();
 
         // Redirect based on role
-        if (roleData?.role === 'admin') {
+        if (!roleError && (roleData as any)?.role === 'admin') {
           router.push('/admin');
         } else {
           router.push('/dashboard');

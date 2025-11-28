@@ -25,12 +25,13 @@ export default function AdminSettingsPage() {
     const supabase = createClient();
 
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('site_config')
         .select('*')
         .single();
 
-      setConfig(data);
+      if (error) throw error;
+      setConfig(data as unknown as SiteConfig);
     } catch (error) {
       console.error('Error loading config:', error);
     } finally {
@@ -139,7 +140,6 @@ export default function AdminSettingsPage() {
               onChange={(e) => setConfig({ ...config, contact_address: e.target.value })}
               fullWidth
               placeholder="Ciudad de México, México"
-              icon={<MapPin className="w-5 h-5" />}
             />
           </div>
         </CardContent>

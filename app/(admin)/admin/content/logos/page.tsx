@@ -212,7 +212,7 @@ export default function AdminLogosPage() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-3">
-                    <h3 className="font-bold text-gray-900">{logo.client_name}</h3>
+                    <h3 className="font-bold text-gray-900">{logo.name}</h3>
                     <Badge variant={logo.is_active ? 'success' : 'default'}>
                       {logo.is_active ? 'Activo' : 'Inactivo'}
                     </Badge>
@@ -236,7 +236,7 @@ export default function AdminLogosPage() {
               <div className="bg-gray-50 rounded-lg p-4 flex items-center justify-center h-24">
                 <img
                   src={logo.logo_url}
-                  alt={logo.client_name}
+                  alt={logo.name}
                   className="max-h-full max-w-full object-contain grayscale hover:grayscale-0 transition-all"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =

@@ -16,13 +16,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: userRole } = await supabase
+    const { data: userRole, error: roleError } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
       .single();
 
-    if (userRole?.role !== 'admin') {
+    if (roleError || (userRole as any)?.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -45,8 +45,8 @@ export async function GET() {
     if (rolesError) throw rolesError;
 
     // Filter to only client roles
-    const clientIds = roles?.filter(r => r.role === 'client').map(r => r.user_id) || [];
-    const clientProfiles = profiles?.filter(p => clientIds.includes(p.id)) || [];
+    const clientIds = (roles as any)?.filter((r: any) => r.role === 'client').map((r: any) => r.user_id) || [];
+    const clientProfiles = (profiles as any)?.filter((p: any) => clientIds.includes(p.id)) || [];
 
     // Get emails from auth.users via admin API
     // This requires service role which is only available on server
@@ -66,11 +66,11 @@ export async function GET() {
 
     // Create subscription map
     const subscriptionMap = new Map(
-      subscriptions?.map(s => [
+      (subscriptions as any)?.map((s: any) => [
         s.user_id,
         {
           status: s.status,
-          plan_name: (s as any).subscription_plans?.name
+          plan_name: s.subscription_plans?.name
         }
       ])
     );
@@ -83,17 +83,17 @@ export async function GET() {
 
     // Create website map
     const websiteMap = new Map(
-      websites?.map(w => [w.user_id, { url: w.url, status: w.status }])
+      (websites as any)?.map((w: any) => [w.user_id, { url: w.url, status: w.status }])
     );
 
     // Enrich profiles with email, subscription, and website data
-    const enrichedClients = clientProfiles.map(profile => ({
+    const enrichedClients = clientProfiles.map((profile: any) => ({
       ...profile,
       email: emailMap.get(profile.id) || 'N/A',
-      subscription_status: subscriptionMap.get(profile.id)?.status,
-      plan_name: subscriptionMap.get(profile.id)?.plan_name,
-      website_url: websiteMap.get(profile.id)?.url,
-      website_status: websiteMap.get(profile.id)?.status,
+      subscription_status: (subscriptionMap.get(profile.id) as any)?.status,
+      plan_name: (subscriptionMap.get(profile.id) as any)?.plan_name,
+      website_url: (websiteMap.get(profile.id) as any)?.url,
+      website_status: (websiteMap.get(profile.id) as any)?.status,
     }));
 
     return NextResponse.json({

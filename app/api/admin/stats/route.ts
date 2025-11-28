@@ -18,13 +18,13 @@ export async function GET() {
     }
 
     // Check if user is admin
-    const { data: roleData } = await authClient
+    const { data: roleData, error: roleError } = await authClient
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
       .single();
 
-    if (roleData?.role !== 'admin') {
+    if (roleError || (roleData as any)?.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

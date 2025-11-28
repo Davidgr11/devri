@@ -143,5 +143,4 @@ export const tailwindColors = {
   error: theme.colors.status.error,
   warning: theme.colors.status.warning,
   info: theme.colors.status.info,
-  whatsapp: theme.colors.whatsapp.green,
 };
