@@ -98,11 +98,11 @@ export function WhyChooseUsSection() {
                 whileTap={{ scale: 0.98 }}
               >
                 <motion.div
-                  className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4"
+                  className="w-12 h-12 bg-accent/10 hover:bg-secondary rounded-lg flex items-center justify-center mb-4"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Icon className="w-6 h-6 text-secondary group-hover:text-gray-900 transition-colors" />
+                  <Icon className="w-6 h-6 text-secondary hover:text-gray-900 transition-colors" />
                 </motion.div>
                 <h3 className="text-lg font-semibold text-gray-50 mb-2">
                   {benefit.title}

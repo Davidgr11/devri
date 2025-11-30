@@ -54,7 +54,8 @@ export default function SignupPage() {
 
       if (authData.user) {
         // Check if email confirmation is required
-        const needsEmailConfirmation = authData.user.identities?.length === 0;
+        // When email confirmation is enabled, the session will be null
+        const needsEmailConfirmation = !authData.session || authData.user.identities?.length === 0;
 
         if (needsEmailConfirmation) {
           // Show verification notice instead of redirecting

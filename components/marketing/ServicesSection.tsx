@@ -34,13 +34,6 @@ export function ServicesSection() {
     getServiceCategories()
       .then((data) => {
         setCategories(data);
-        // Auto-select first active primary and its first child
-        if (data.length > 0) {
-          setSelectedPrimary(data[0].id);
-          if (data[0].children && data[0].children.length > 0) {
-            setSelectedSecondary(data[0].children[0].id);
-          }
-        }
         setIsLoading(false);
       })
       .catch((error) => {
@@ -95,18 +88,253 @@ export function ServicesSection() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            Soluciones diseñadas para ti
+            Nuestros Servicios
           </motion.h2>
-          <motion.p
-            className="text-lg md:text-xl text-gray-600"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            ¿Con cuál te identificas?
-          </motion.p>
         </motion.div>
+
+        {/* Service Types Grid */}
+        <div className="mb-16">
+          {/* Desktop - 3x2 Grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 xl:grid-cols-6 mb-8">
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.Globe className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Sitios Web</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                Páginas web modernas y responsivas que reflejan la esencia de tu marca.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.Database className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Sistemas de gestión</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                Plataformas completas para administrar tu negocio de forma eficiente.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.Smartphone className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Aplicaciones web</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                Soluciones a medida que se adaptan perfectamente a tus necesidades.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.Share2 className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Gestión de redes sociales</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                Estrategias digitales para conectar con tu audiencia en redes sociales.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.Sparkles className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Estrategia de marca</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                Construcción de identidad visual y posicionamiento de marca único.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100 hover:border-accent transition-all duration-300 hover:shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                <Icons.ShoppingCart className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Tiendas en línea</h3>
+              <p className="text-sm text-gray-600 text-justify">
+                E-commerce completo con pasarelas de pago y gestión de inventario.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Mobile - Horizontal Scroll */}
+          <div className="md:hidden -mx-4 px-4">
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.Globe className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Sitios Web</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  Páginas web modernas y responsivas que reflejan la esencia de tu marca.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.Database className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Sistemas de gestión</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  Plataformas completas para administrar tu negocio de forma eficiente.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.Smartphone className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Aplicaciones personalizadas</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  Soluciones a medida que se adaptan perfectamente a tus necesidades.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.Share2 className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Gestión de redes sociales</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  Estrategias digitales para conectar con tu audiencia en redes sociales.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.Sparkles className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Estrategia de marca</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  Construcción de identidad visual y posicionamiento de marca único.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className="flex-shrink-0 w-[280px] snap-center bg-white rounded-xl p-6 shadow-lg border-2 border-gray-100"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
+                <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mb-4">
+                  <Icons.ShoppingCart className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Tiendas en línea</h3>
+                <p className="text-sm text-gray-600 text-justify">
+                  E-commerce completo con pasarelas de pago y gestión de inventario.
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Scroll Hint */}
+            <p className="text-center text-sm text-gray-500 mt-2">
+              Desliza para ver más →
+            </p>
+          </div>
+
+          {/* Identify Section Header */}
+          <motion.h3
+              className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-2 mt-16"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              ¿Quiéres ver una de nuestras soluciones?
+            </motion.h3>
+        </div>
+
+        {/* Content Area */}
+        {!currentPrimaryCategory && (
+          <motion.div
+            className="pb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="max-w-2xl mx-auto flex items-center justify-center gap-6">
+              <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-accent/10 rounded-full flex items-center justify-center">
+                <Icons.MousePointerClick className="w-8 h-8 md:w-10 md:h-10 text-accent" />
+              </div>
+              <p className="text-base md:text-lg text-gray-600 text-left">
+                Selecciona una categoría para ver las soluciones disponibles
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Primary Tabs - Horizontal buttons on both mobile and desktop */}
         <motion.div
@@ -164,7 +392,7 @@ export function ServicesSection() {
           </div>
         </motion.div>
 
-        {/* Content Area */}
+
         {currentPrimaryCategory && (
           <div className="grid md:grid-cols-12 gap-6 md:gap-8">
             {/* Secondary Tabs - Desktop: Vertical Left, Mobile: Vertical Right Sticky */}
