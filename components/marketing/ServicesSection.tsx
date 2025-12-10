@@ -479,10 +479,10 @@ export function ServicesSection() {
                           </p>
                         </div>
 
-                        {currentSecondaryCategory.demo_slug && (
-                          <Link href={`/demos/${currentSecondaryCategory.demo_slug}`}>
-                            <Button className='bg-gray-700 text-gray-50 hover:bg-gray-500'>Ver Demo</Button>
-                          </Link>
+                        {currentSecondaryCategory.demo_url && (
+                          <a href={currentSecondaryCategory.demo_url} target="_blank" rel="noopener noreferrer">
+                            <Button className='bg-gray-700 text-gray-50 hover:bg-gray-500'>Ver Sitio Web</Button>
+                          </a>
                         )}
                       </motion.div>
                     )}

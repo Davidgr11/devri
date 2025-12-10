@@ -39,7 +39,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, slug, description, callout, icon, type, parent_id, order_index, demo_slug, status } = body;
+    const { name, slug, description, callout, icon, type, parent_id, order_index, demo_url, status } = body;
 
     if (!name || !slug || !type) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
         type,
         parent_id,
         order_index: order_index ?? 0,
-        demo_slug,
+        demo_url,
         status: status ?? 'active',
       })
       .select()
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, name, slug, description, callout, icon, type, parent_id, order_index, demo_slug, status } = body;
+    const { id, name, slug, description, callout, icon, type, parent_id, order_index, demo_url, status } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -99,7 +99,7 @@ export async function PUT(request: Request) {
         type,
         parent_id,
         order_index,
-        demo_slug,
+        demo_url,
         status,
       })
       .eq('id', id)

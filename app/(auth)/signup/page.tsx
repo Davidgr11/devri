@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormData } from '@/lib/validations/schemas';
 import { createClient } from '@/lib/supabase/client';
-import { sendWelcomeEmail } from '@/lib/resend/client';
 import { Button, Input } from '@/components/ui';
 import Image from 'next/image';
 
@@ -62,17 +61,8 @@ export default function SignupPage() {
           setUserEmail(data.email);
           setShowVerificationNotice(true);
         } else {
-          // Send welcome email
-          try {
-            await sendWelcomeEmail({
-              to: data.email,
-              name: data.full_name,
-            });
-          } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-          }
-
           // Redirect to onboarding if no email confirmation needed
+          // Note: Supabase handles welcome emails via SMTP
           router.push('/onboarding');
         }
       }

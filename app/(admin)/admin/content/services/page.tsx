@@ -21,6 +21,7 @@ export default function AdminServicesPage() {
     callout: '',
     icon: '',
     parent_id: '',
+    demo_url: '',
     status: 'active' as 'active' | 'inactive',
   });
 
@@ -71,6 +72,7 @@ export default function AdminServicesPage() {
             description: formData.description || null,
             callout: formData.callout || null,
             icon: formData.icon || null,
+            demo_url: formData.demo_url || null,
             status: formData.status,
             type: formData.parent_id ? 'secondary' : 'primary',
             parent_id: formData.parent_id || null,
@@ -81,6 +83,7 @@ export default function AdminServicesPage() {
             description: formData.description || null,
             callout: formData.callout || null,
             icon: formData.icon || null,
+            demo_url: formData.demo_url || null,
             status: formData.status,
             type: formData.parent_id ? 'secondary' : 'primary',
             parent_id: formData.parent_id || null,
@@ -133,6 +136,7 @@ export default function AdminServicesPage() {
       callout: category.callout || '',
       icon: category.icon || '',
       parent_id: category.parent_id || '',
+      demo_url: category.demo_url || '',
       status: category.status,
     });
     setIsCreating(true);
@@ -147,6 +151,7 @@ export default function AdminServicesPage() {
       callout: '',
       icon: '',
       parent_id: '',
+      demo_url: '',
       status: 'active' as 'active' | 'inactive',
     });
   };
@@ -202,6 +207,14 @@ export default function AdminServicesPage() {
                 fullWidth
                 rows={2}
                 placeholder="Ej: ¿Tu negocio no aparece en Google? o ¿Necesitas más clientes?"
+              />
+              <Input
+                label="URL del Demo/Sitio Web (opcional)"
+                value={formData.demo_url}
+                onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
+                fullWidth
+                type="url"
+                placeholder="https://ejemplo.com"
               />
               <Select
                 label="Ícono Lucide (opcional)"

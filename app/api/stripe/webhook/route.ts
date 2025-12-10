@@ -8,6 +8,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { verifyWebhookSignature } from '@/lib/stripe/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendSubscriptionConfirmationEmail } from '@/lib/resend/client';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-11-17.clover',
@@ -82,11 +83,18 @@ export async function POST(req: NextRequest) {
           ? subscription.customer
           : subscription.customer.id;
 
-        // Get plan price to set as initial actual_monthly_price
+        // Get plan details
         const { data: plan } = await supabase
           .from('subscription_plans')
-          .select('price_mxn')
+          .select('name, price_mxn')
           .eq('id', planId)
+          .single();
+
+        // Get user details for email
+        const { data: user } = await supabase
+          .from('users')
+          .select('email, full_name')
+          .eq('id', userId)
           .single();
 
         // Create subscription record
@@ -100,6 +108,22 @@ export async function POST(req: NextRequest) {
           current_period_end: new Date((subscription as any).current_period_end * 1000).toISOString(),
           actual_monthly_price: plan?.price_mxn || 0,
         });
+
+        // Send confirmation email
+        if (user && plan) {
+          try {
+            await sendSubscriptionConfirmationEmail({
+              to: user.email,
+              name: user.full_name,
+              planName: plan.name,
+              amount: plan.price_mxn,
+            });
+            console.log(`Subscription confirmation email sent to ${user.email}`);
+          } catch (emailError) {
+            console.error('Error sending subscription confirmation email:', emailError);
+            // Don't fail the webhook if email fails
+          }
+        }
 
         console.log(`Subscription created for user ${userId}`);
         break;

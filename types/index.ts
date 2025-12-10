@@ -35,7 +35,7 @@ export interface ServiceCategory {
   type: ServiceCategoryType;
   parent_id: string | null;
   order_index: number;
-  demo_slug: string | null;
+  demo_url: string | null;
   status: ServiceCategoryStatus;
   created_at: string;
   updated_at: string;

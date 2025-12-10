@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createClient as createAuthClient } from '@/lib/supabase/server';
+import { sendWebsitePublishedEmail } from '@/lib/resend/client';
 
 export async function PATCH(
   req: NextRequest,
@@ -51,7 +52,7 @@ export async function PATCH(
     // Check if website record exists
     const { data: existingWebsite } = await supabase
       .from('client_websites')
-      .select('id')
+      .select('id, status')
       .eq('user_id', userId)
       .single();
 
@@ -59,6 +60,10 @@ export async function PATCH(
     const updates: any = {};
     if (url !== undefined) updates.url = url;
     if (status !== undefined) updates.status = status;
+
+    // Check if this is a new publish (status changing to published)
+    const isNewlyPublished = status === 'published' &&
+      (!existingWebsite || existingWebsite.status !== 'published');
 
     // If publishing for first time, set published_at
     if (status === 'published' && !existingWebsite) {
@@ -92,6 +97,30 @@ export async function PATCH(
 
       if (error) throw error;
       result = data;
+    }
+
+    // Send email notification if website was just published
+    if (isNewlyPublished && url) {
+      try {
+        // Get user details for email
+        const { data: user } = await supabase
+          .from('users')
+          .select('email, full_name')
+          .eq('id', userId)
+          .single();
+
+        if (user) {
+          await sendWebsitePublishedEmail({
+            to: user.email,
+            name: user.full_name,
+            websiteUrl: url,
+          });
+          console.log(`Website published email sent to ${user.email}`);
+        }
+      } catch (emailError) {
+        console.error('Error sending website published email:', emailError);
+        // Don't fail the request if email fails
+      }
     }
 
     return NextResponse.json({
