@@ -106,6 +106,7 @@ export default function AccountingPage() {
 
   // Viewer
   const [viewer, setViewer] = useState<{ url: string; name: string } | null>(null);
+  const [viewingId, setViewingId] = useState<string | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -165,8 +166,13 @@ export default function AccountingPage() {
 
   const openViewer = async (file: AccountingFile) => {
     if (!file.storage_path) return;
-    const url = await getSignedUrl(file.storage_path);
-    if (url) setViewer({ url, name: file.file_name });
+    setViewingId(file.id);
+    try {
+      const url = await getSignedUrl(file.storage_path);
+      if (url) setViewer({ url, name: file.file_name });
+    } finally {
+      setViewingId(null);
+    }
   };
 
   const doDownload = async (file: AccountingFile) => {
@@ -521,10 +527,14 @@ export default function AccountingPage() {
                                   ? setStripePreview({ month: md.month, transactions: md.stripeTransactions })
                                   : openViewer(file)
                                 }
-                                className={`p-1.5 rounded-lg transition-colors ${eyeColor}`}
+                                disabled={viewingId === file.id}
+                                className={`p-1.5 rounded-lg transition-colors ${eyeColor} disabled:opacity-60`}
                                 title="Ver"
                               >
-                                <Eye className="w-4 h-4" />
+                                {viewingId === file.id
+                                  ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                  : <Eye className="w-4 h-4" />
+                                }
                               </button>
                               <button
                                 onClick={() => confirmDelete(file)}

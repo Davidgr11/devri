@@ -29,7 +29,7 @@ export function ClientLogosCarousel() {
               key={`${logo.id}-${index}`}
               className="flex-shrink-0 mx-6 md:mx-10 flex items-center justify-center"
             >
-              <div className="relative w-32 h-14 sm:w-40 sm:h-16 grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-80">
+              <div className="relative w-36 h-16 sm:w-44 sm:h-20 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
                 <Image
                   src={logo.logo_url}
                   alt={logo.name}

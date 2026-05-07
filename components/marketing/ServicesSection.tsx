@@ -145,7 +145,7 @@ export function ServicesSection() {
 
                   {/* Title & Description */}
                   <h3 className="text-xl font-semibold text-white mb-3">{service.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-5">{service.description}</p>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-5 text-justify">{service.description}</p>
 
                   {/* Features */}
                   <ul className="space-y-1.5 mb-6">

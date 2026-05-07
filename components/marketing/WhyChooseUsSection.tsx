@@ -121,7 +121,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         ))}
       </div>
 
-      <p className="text-gray-300 text-sm leading-relaxed flex-1">"{t.quote}"</p>
+      <p className="text-gray-300 text-sm leading-relaxed flex-1 text-justify">"{t.quote}"</p>
 
       {/* Author */}
       <div className="flex items-center gap-3 pt-2 border-t border-white/5">
@@ -159,7 +159,7 @@ function TestimonialsCarousel({ testimonials }: { testimonials: Testimonial[] })
     <div className="relative overflow-hidden">
       <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#0B0D14] to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#0B0D14] to-transparent z-10 pointer-events-none" />
-      <div className="flex gap-5 animate-[scroll_30s_linear_infinite] hover:[animation-play-state:paused] w-max">
+      <div className="flex gap-5 animate-[scroll_45s_linear_infinite] hover:[animation-play-state:paused] w-max">
         {doubled.map((t, i) => (
           <div key={`${t.id}-${i}`} className="w-[320px] flex-shrink-0">
             <TestimonialCard t={t} />
@@ -171,12 +171,12 @@ function TestimonialsCarousel({ testimonials }: { testimonials: Testimonial[] })
 }
 
 export function WhyChooseUsSection() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
 
   useEffect(() => {
     getTestimonials()
-      .then((data) => setTestimonials(data.length > 0 ? data : fallbackTestimonials))
-      .catch(() => setTestimonials(fallbackTestimonials));
+      .then((data) => { if (data.length > 0) setTestimonials(data); })
+      .catch(() => {});
   }, []);
 
   return (
@@ -228,7 +228,7 @@ export function WhyChooseUsSection() {
                   <Icon className={`w-5 h-5 ${benefit.color}`} />
                 </div>
                 <h3 className="text-white font-semibold mb-2">{benefit.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{benefit.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed text-justify">{benefit.description}</p>
               </motion.div>
             );
           })}
@@ -251,8 +251,19 @@ export function WhyChooseUsSection() {
             </h3>
           </motion.div>
 
-          {/* Auto-scroll carousel */}
-          <TestimonialsCarousel testimonials={testimonials} />
+          {/* Mobile: horizontal swipeable scroll */}
+          <div className="md:hidden -mx-4 px-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-4 pb-2">
+            {testimonials.map((t) => (
+              <div key={t.id} className="snap-start flex-shrink-0 w-[80vw] max-w-[300px]">
+                <TestimonialCard t={t} />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: auto-scroll carousel */}
+          <div className="hidden md:block">
+            <TestimonialsCarousel testimonials={testimonials} />
+          </div>
         </div>
       </div>
     </section>

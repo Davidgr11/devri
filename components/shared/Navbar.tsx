@@ -115,7 +115,7 @@ export function Navbar() {
               </Link>
             ) : (
               <>
-                <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors font-medium">
+                <Link href="/login" className="text-sm text-gray-300 hover:text-white transition-all font-medium px-4 py-2 rounded-xl border border-white/20 hover:border-white/40 hover:bg-white/5">
                   Iniciar Sesión
                 </Link>
                 <Link href="/#contacto" onClick={(e) => handleHashClick(e, '/#contacto')}>
@@ -142,8 +142,8 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden absolute top-full left-0 right-0',
-          'bg-[#0B0D14]/98 backdrop-blur-xl border-t border-white/5',
+          'md:hidden fixed top-16 left-0 right-0',
+          'bg-[#0B0D14] border-t border-white/5 shadow-2xl',
           'transition-all duration-300 ease-in-out',
           isOpen
             ? 'opacity-100 translate-y-0 visible'
@@ -161,7 +161,7 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-4 mt-2 border-t border-white/5 space-y-2">
+          <div className="pt-4 mt-2 border-t border-white/5 flex flex-col gap-3">
             {isAuthenticated ? (
               <Link href={role === 'admin' || role === 'contador' ? '/admin' : '/dashboard'}>
                 <Button fullWidth className="gap-1.5">
@@ -172,7 +172,7 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button fullWidth variant="ghost" className="border border-white/10">
+                  <Button fullWidth variant="ghost" className="border border-white/30 text-white bg-white/5 hover:bg-white/10">
                     Iniciar Sesión
                   </Button>
                 </Link>
