@@ -44,6 +44,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={inputId}
           className={cn(
             'px-4 py-3 border-2 rounded-lg transition-all duration-150',
+            'bg-white text-gray-900 placeholder:text-gray-400',
             'focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent',
             'disabled:bg-gray-100 disabled:cursor-not-allowed',
             'resize-y min-h-[100px]',

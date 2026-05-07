@@ -3,7 +3,7 @@
  */
 
 // ========== USER & AUTH ==========
-export type UserRole = 'client' | 'admin';
+export type UserRole = 'client' | 'admin' | 'contador';
 
 export interface UserProfile {
   id: string;
@@ -67,6 +67,9 @@ export interface ClientWebsite {
   user_id: string;
   url: string | null;
   status: WebsiteStatus;
+  title: string | null;
+  instructions: string | null;
+  admin_notes: string | null;
   assigned_at: string | null;
   published_at: string | null;
   created_at: string;
@@ -257,4 +260,113 @@ export interface StripeCheckoutSession {
 
 export interface StripeCustomerPortalSession {
   url: string;
+}
+
+// ========== ACCOUNTING FILES ==========
+export type AccountingFileType = 'bank_statement' | 'stripe_export' | 'other';
+
+export interface AccountingFile {
+  id: string;
+  uploaded_by: string;
+  type: AccountingFileType;
+  period_month: number;
+  period_year: number;
+  file_url: string;
+  file_name: string;
+  storage_path: string | null;
+  file_size_bytes: number | null;
+  notes: string | null;
+  amount_total: number | null;
+  currency: string;
+  initial_balance: number | null;
+  final_balance: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccountingMovement {
+  id: string;
+  file_id: string | null;
+  period_month: number;
+  period_year: number;
+  type: 'deposit' | 'withdrawal';
+  concept: string;
+  movement_date: string | null;
+  amount: number;
+  is_template: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccountingStripeTransaction {
+  id: string;
+  file_id: string | null;
+  period_month: number;
+  period_year: number;
+  charge_id: string | null;
+  transaction_date: string | null;
+  amount: number | null;
+  fee: number | null;
+  taxes_on_fee: number | null;
+  description: string | null;
+  customer_email: string | null;
+  currency: string;
+  created_at: string;
+}
+
+// ========== CLIENT PAYMENT LINKS ==========
+export type PaymentLinkType = 'subscription' | 'one_time' | 'advance' | 'other' | 'transfer';
+export type PaymentStatus = 'pending' | 'processing' | 'paid' | 'active_subscription' | 'inactive';
+
+export interface ClientPaymentLink {
+  id: string;
+  user_id: string;
+  stripe_url: string | null;
+  label: string;
+  description: string | null;
+  amount_mxn: number | null;
+  type: PaymentLinkType;
+  is_active: boolean;
+  payment_status: PaymentStatus | null;
+  transfer_details: string | null;
+  assigned_by: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClientPaymentLinkWithUser extends ClientPaymentLink {
+  user?: Pick<UserWithRole, 'id' | 'full_name' | 'email'>;
+}
+
+// ========== PROPOSALS ==========
+export type ProposalStatus = 'draft' | 'sent' | 'signed' | 'rejected';
+
+export interface ProposalSignatureData {
+  name: string;
+  signed_at: string;
+  ip?: string;
+  user_agent?: string;
+}
+
+export interface Proposal {
+  id: string;
+  client_user_id: string;
+  created_by: string;
+  title: string;
+  content: string;
+  status: ProposalStatus;
+  signature_data: ProposalSignatureData | null;
+  signed_at: string | null;
+  valid_until: string | null;
+  amount_mxn: number | null;
+  notes: string | null;
+  attachment_url: string | null;
+  attachment_name: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProposalWithClient extends Proposal {
+  client?: Pick<UserWithRole, 'id' | 'full_name' | 'email'>;
 }

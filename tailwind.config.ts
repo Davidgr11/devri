@@ -9,7 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Gray Scale
         gray: {
           50: '#F9FAFB',
           100: '#F3F4F6',
@@ -21,8 +20,8 @@ const config: Config = {
           700: '#374151',
           800: '#1F2937',
           900: '#111827',
+          950: '#0B0D14',
         },
-        // Accent Colors
         accent: {
           light: '#DDD6FE',
           DEFAULT: '#A78BFA',
@@ -41,12 +40,19 @@ const config: Config = {
           dark: '#F59E0B',
           darker: '#D97706',
         },
-        // Status Colors
         success: '#10B981',
         error: '#EF4444',
         warning: '#F59E0B',
         info: '#3B82F6',
         whatsapp: '#25D366',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-mesh': 'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(124,58,237,0.15) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(110,231,183,0.05) 0%, transparent 50%)',
+        'grid-pattern': 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'grid-40': '40px 40px',
       },
       animation: {
         'fade-in': 'fade-in 0.5s ease-in-out',
@@ -57,6 +63,8 @@ const config: Config = {
         'scale-in': 'scale-in 0.3s ease-out',
         'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
         'scroll': 'scroll 20s linear infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
       },
       keyframes: {
         'fade-in': {
@@ -90,6 +98,14 @@ const config: Config = {
         scroll: {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-50%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(124,58,237,0.3)' },
+          '50%': { boxShadow: '0 0 40px rgba(124,58,237,0.6), 0 0 80px rgba(124,58,237,0.3)' },
         },
       },
       transitionDuration: {

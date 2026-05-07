@@ -640,3 +640,130 @@ export async function sendPasswordResetEmail(params: {
     `,
   });
 }
+
+const emailLayout = (headerBg: string, headerContent: string, body: string) => `
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DEVRI</title></head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f3f4f6;">
+<table role="presentation" style="width:100%;background:#f3f4f6;"><tr><td align="center" style="padding:40px 20px;">
+<table role="presentation" style="width:100%;max-width:600px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);">
+<tr><td style="background:${headerBg};padding:32px 30px;text-align:center;">${headerContent}</td></tr>
+<tr><td style="padding:36px 30px;">${body}</td></tr>
+<tr><td style="background:#111827;padding:24px;text-align:center;">
+  <p style="margin:0;color:#9CA3AF;font-size:13px;"><strong style="color:#A78BFA;">DEVRI</strong> — Agencia Digital</p>
+  <p style="margin:8px 0 0;color:#6B7280;font-size:12px;">📧 <a href="mailto:info@devri.com.mx" style="color:#A78BFA;text-decoration:none;">info@devri.com.mx</a></p>
+</td></tr>
+</table></td></tr></table></body></html>`;
+
+const emailBtn = (href: string, label: string, color = '#7C3AED') =>
+  `<table role="presentation" style="width:100%;margin:24px 0;"><tr><td align="center">
+  <a href="${href}" style="display:inline-block;padding:14px 32px;background:${color};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px;">${label}</a>
+  </td></tr></table>`;
+
+export async function sendPaymentLinkAssignedEmail(params: {
+  to: string; name: string; label: string; amount?: number | null; dashboardUrl: string;
+}) {
+  if (!isResendConfigured()) return { id: 'skipped' };
+  const header = `<h1 style="margin:0;color:#fff;font-size:26px;font-weight:700;">Tienes un nuevo pago pendiente</h1>
+    <p style="margin:8px 0 0;color:#DDD6FE;font-size:14px;">DEVRI ha asignado un pago a tu cuenta</p>`;
+  const body = `<p style="color:#374151;font-size:15px;margin:0 0 16px;">Hola <strong>${params.name}</strong>,</p>
+    <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 20px;">Se ha generado un nuevo pago en tu cuenta:</p>
+    <table role="presentation" style="width:100%;background:#F9FAFB;border-radius:10px;border:1px solid #E5E7EB;margin:0 0 20px;">
+      <tr><td style="padding:20px;">
+        <p style="margin:0 0 6px;color:#6B7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Concepto</p>
+        <p style="margin:0;color:#111827;font-size:18px;font-weight:700;">${params.label}</p>
+        ${params.amount ? `<p style="margin:8px 0 0;color:#A78BFA;font-size:22px;font-weight:700;">$${params.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</p>` : ''}
+      </td></tr>
+    </table>
+    ${emailBtn(params.dashboardUrl, 'Ver mis pagos')}
+    <p style="color:#9CA3AF;font-size:13px;text-align:center;margin:0;">Si tienes dudas, contáctanos directamente.</p>`;
+  return resend.emails.send({
+    from: 'DEVRI Pagos <avisos@devri.com.mx>',
+    to: params.to,
+    subject: `Nuevo pago asignado: ${params.label}`,
+    html: emailLayout('linear-gradient(135deg,#A78BFA 0%,#7C3AED 100%)', header, body),
+  });
+}
+
+export async function sendPaymentReportedByClientEmail(params: {
+  to: string | string[]; clientName: string; label: string; adminUrl: string;
+}) {
+  if (!isResendConfigured()) return { id: 'skipped' };
+  const header = `<div style="font-size:36px;margin-bottom:10px;">💳</div>
+    <h1 style="margin:0;color:#fff;font-size:24px;font-weight:700;">Cliente reportó un pago</h1>`;
+  const body = `<p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 20px;">
+    <strong>${params.clientName}</strong> indica que ya realizó el pago para <strong>${params.label}</strong>. Verifica y actualiza el estado correspondiente.</p>
+    ${emailBtn(params.adminUrl, 'Ver en el panel', '#059669')}`;
+  return resend.emails.send({
+    from: 'DEVRI Sistema <avisos@devri.com.mx>',
+    to: params.to,
+    subject: `${params.clientName} reportó pago: ${params.label}`,
+    html: emailLayout('linear-gradient(135deg,#34D399 0%,#059669 100%)', header, body),
+  });
+}
+
+export async function sendPaymentStatusChangedEmail(params: {
+  to: string; name: string; label: string; status: string; dashboardUrl: string;
+}) {
+  if (!isResendConfigured()) return { id: 'skipped' };
+  const statusMsg: Record<string, string> = {
+    paid: 'Tu pago ha sido confirmado. ¡Gracias!',
+    active_subscription: 'Tu suscripción está activa. ¡Bienvenido!',
+    inactive: 'Tu pago ha sido marcado como inactivo. Contáctanos si tienes preguntas.',
+  };
+  const msg = statusMsg[params.status] || `El estado de tu pago ha cambiado a: ${params.status}.`;
+  const header = `<h1 style="margin:0;color:#fff;font-size:24px;font-weight:700;">Actualización de estado de pago</h1>`;
+  const body = `<p style="color:#374151;font-size:15px;margin:0 0 16px;">Hola <strong>${params.name}</strong>,</p>
+    <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 20px;">El estado del pago <strong>${params.label}</strong> ha sido actualizado:</p>
+    <p style="color:#374151;font-size:16px;line-height:1.6;margin:0 0 24px;">${msg}</p>
+    ${emailBtn(params.dashboardUrl, 'Ver mis pagos')}`;
+  return resend.emails.send({
+    from: 'DEVRI Pagos <avisos@devri.com.mx>',
+    to: params.to,
+    subject: `Actualización de pago: ${params.label}`,
+    html: emailLayout('linear-gradient(135deg,#A78BFA 0%,#7C3AED 100%)', header, body),
+  });
+}
+
+export async function sendProposalSentEmail(params: {
+  to: string; name: string; title: string; amount?: number | null; dashboardUrl: string;
+}) {
+  if (!isResendConfigured()) return { id: 'skipped' };
+  const header = `<div style="font-size:36px;margin-bottom:10px;">📄</div>
+    <h1 style="margin:0;color:#fff;font-size:26px;font-weight:700;">Tienes una propuesta pendiente</h1>
+    <p style="margin:8px 0 0;color:#DDD6FE;font-size:14px;">Requiere tu firma digital</p>`;
+  const body = `<p style="color:#374151;font-size:15px;margin:0 0 16px;">Hola <strong>${params.name}</strong>,</p>
+    <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 20px;">Hemos preparado una propuesta para ti. Por favor revísala y fírmala cuando estés listo:</p>
+    <table role="presentation" style="width:100%;background:#F9FAFB;border-radius:10px;border:1px solid #E5E7EB;margin:0 0 20px;">
+      <tr><td style="padding:20px;">
+        <p style="margin:0 0 4px;color:#6B7280;font-size:12px;font-weight:600;text-transform:uppercase;">Propuesta</p>
+        <p style="margin:0;color:#111827;font-size:18px;font-weight:700;">${params.title}</p>
+        ${params.amount ? `<p style="margin:8px 0 0;color:#A78BFA;font-size:20px;font-weight:700;">$${params.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</p>` : ''}
+      </td></tr>
+    </table>
+    ${emailBtn(params.dashboardUrl, 'Revisar y firmar propuesta')}
+    <p style="color:#9CA3AF;font-size:13px;text-align:center;margin:0;">Puedes firmar digitalmente desde tu panel de cliente.</p>`;
+  return resend.emails.send({
+    from: 'DEVRI <hola@devri.com.mx>',
+    to: params.to,
+    subject: `Nueva propuesta: ${params.title}`,
+    html: emailLayout('linear-gradient(135deg,#A78BFA 0%,#7C3AED 100%)', header, body),
+  });
+}
+
+export async function sendProposalSignedEmail(params: {
+  to: string | string[]; clientName: string; title: string; signedAt: string; adminUrl: string;
+}) {
+  if (!isResendConfigured()) return { id: 'skipped' };
+  const header = `<div style="font-size:36px;margin-bottom:10px;">✅</div>
+    <h1 style="margin:0;color:#fff;font-size:24px;font-weight:700;">Propuesta firmada</h1>`;
+  const body = `<p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 20px;">
+    <strong>${params.clientName}</strong> ha firmado digitalmente la propuesta <strong>"${params.title}"</strong>.</p>
+    <p style="color:#6B7280;font-size:14px;margin:0 0 24px;">Fecha de firma: ${new Date(params.signedAt).toLocaleString('es-MX')}</p>
+    ${emailBtn(params.adminUrl, 'Ver propuesta firmada', '#059669')}`;
+  return resend.emails.send({
+    from: 'DEVRI Sistema <avisos@devri.com.mx>',
+    to: params.to,
+    subject: `Propuesta firmada por ${params.clientName}: ${params.title}`,
+    html: emailLayout('linear-gradient(135deg,#34D399 0%,#059669 100%)', header, body),
+  });
+}

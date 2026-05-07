@@ -1,8 +1,3 @@
-/**
- * Contact Section
- * Wizard-style contact form (one question at a time)
- */
-
 'use client';
 
 import { useState } from 'react';
@@ -11,83 +6,67 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { contactFormSchema, type ContactFormData } from '@/lib/validations/schemas';
-import { Button, Input, Textarea, Select } from '@/components/ui';
+import { Button } from '@/components/ui';
 
 const steps = [
-  { id: 'name', label: 'Nombre completo', type: 'text' },
-  { id: 'email', label: 'Email', type: 'email' },
-  { id: 'phone', label: 'Teléfono', type: 'tel' },
-  { id: 'business_type', label: 'Tipo de negocio', type: 'select' },
-  { id: 'message', label: 'Cuéntanos qué necesitas', type: 'textarea' },
+  { id: 'name', label: '¿Cómo te llamas?', placeholder: 'Tu nombre completo', type: 'text' },
+  { id: 'email', label: '¿Cuál es tu email?', placeholder: 'tu@email.com', type: 'email' },
+  { id: 'phone', label: '¿Y tu teléfono?', placeholder: '55 1234 5678', type: 'tel' },
+  { id: 'business_type', label: '¿Cómo describes tu negocio?', placeholder: '', type: 'select' },
+  { id: 'message', label: '¿Qué necesitas?', placeholder: 'Cuéntanos tu proyecto con el mayor detalle posible...', type: 'textarea' },
 ];
+
+const businessOptions = [
+  { value: 'negocio-local', label: 'Tengo un negocio local' },
+  { value: 'profesional-independiente', label: 'Soy profesional independiente' },
+  { value: 'empresa', label: 'Tengo una empresa' },
+  { value: 'startup', label: 'Tengo una startup' },
+];
+
+const inputClass = 'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-all';
 
 export function ContactSection() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-    reset,
-  } = useForm<ContactFormData>({
+  const { register, handleSubmit, formState: { errors }, trigger, reset } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   });
 
   const currentField = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
   const isFirstStep = currentStep === 0;
+  const progress = ((currentStep + 1) / steps.length) * 100;
 
   const handleNext = async (e?: React.MouseEvent) => {
     e?.preventDefault();
-    const fieldName = currentField.id as keyof ContactFormData;
-    const isValid = await trigger(fieldName);
-
-    if (isValid && !isLastStep) {
-      setCurrentStep((prev) => prev + 1);
-    }
+    const isValid = await trigger(currentField.id as keyof ContactFormData);
+    if (isValid && !isLastStep) setCurrentStep((prev) => prev + 1);
   };
 
   const handlePrevious = () => {
-    if (!isFirstStep) {
-      setCurrentStep((prev) => prev - 1);
-    }
+    if (!isFirstStep) setCurrentStep((prev) => prev - 1);
   };
 
   const onSubmit = async (data: ContactFormData) => {
-    // Only submit if we're on the last step
-    if (!isLastStep) {
-      return;
-    }
-
+    if (!isLastStep) return;
     setIsSubmitting(true);
+    setSubmitError('');
     try {
-      // Submit via API route
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          business_type: data.business_type,
-          message: data.message || '',
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
-
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al enviar el formulario');
+        const err = await response.json();
+        throw new Error(err.error || 'Error al enviar');
       }
-
       setIsSuccess(true);
     } catch (error: any) {
-      console.error('Error submitting form:', error);
-      alert(error.message || 'Hubo un error al enviar el formulario. Por favor intenta de nuevo.');
+      setSubmitError(error.message || 'Error al enviar el formulario. Intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
@@ -96,28 +75,29 @@ export function ContactSection() {
   const handleReset = () => {
     setIsSuccess(false);
     setCurrentStep(0);
+    setSubmitError('');
     reset();
   };
 
   if (isSuccess) {
     return (
-      <section id="contacto" className="py-16 md:py-24 bg-gray-50 scroll-mt-16 md:scroll-mt-20">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="contacto" className="py-20 md:py-28 bg-[#080A10] scroll-mt-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl p-8 md:p-12 text-center shadow-lg"
+            className="rounded-2xl border border-secondary-dark/30 bg-secondary-dark/5 p-10 text-center"
           >
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-10 h-10 text-green-600" />
+            <div className="w-16 h-16 rounded-2xl bg-secondary-dark/20 border border-secondary-dark/30 flex items-center justify-center mx-auto mb-5">
+              <Check className="w-8 h-8 text-secondary" />
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              ¡Mensaje enviado!
-            </h3>
-            <p className="text-gray-600 mb-8">
-              Gracias por contactarnos. Te responderemos muy pronto.
+            <h3 className="text-2xl font-bold text-white mb-3">¡Listo, recibimos tu mensaje!</h3>
+            <p className="text-gray-400 mb-8">
+              Te respondemos dentro de las próximas 24 horas. ¡Estamos emocionados de conocer tu proyecto!
             </p>
-            <Button onClick={handleReset}>Enviar otro mensaje</Button>
+            <Button onClick={handleReset} variant="ghost" className="border border-white/10 text-gray-300 hover:text-white">
+              Enviar otro mensaje
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -125,173 +105,147 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contacto" className="py-16 md:py-24 bg-gray-50 scroll-mt-16 md:scroll-mt-20">
+    <section id="contacto" className="py-20 md:py-28 bg-[#080A10] relative scroll-mt-20">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent-dark/6 rounded-full blur-[120px]" />
+      </div>
+
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="text-center mb-8"
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
         >
-          <motion.h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Cuéntanos sobre tu proyecto
-          </motion.h2>
-          <motion.p
-            className="text-lg text-gray-600"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            Responde unas preguntas y te contactamos
-          </motion.p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 text-accent-light text-xs font-medium mb-5 uppercase tracking-wider">
+            Contacto
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+            Cuéntanos sobre
+            <br />
+            <span className="gradient-text">tu proyecto</span>
+          </h2>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            Responde unas preguntas rápidas y te contactamos en menos de 24 horas.
+          </p>
         </motion.div>
 
-        {/* Progress Bar */}
+        {/* Form card */}
         <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Pregunta {currentStep + 1} de {steps.length}</span>
-            <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-            <motion.div
-              className="bg-accent h-2 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-        </motion.div>
-
-        {/* Form */}
-        <motion.form
-          onSubmit={handleSubmit(onSubmit)}
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-lg"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
         >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {currentField.type === 'text' || currentField.type === 'email' || currentField.type === 'tel' ? (
-                <Input
-                  {...register(currentField.id as keyof ContactFormData)}
-                  label={currentField.label}
-                  type={currentField.type}
-                  error={errors[currentField.id as keyof ContactFormData]?.message}
-                  fullWidth
-                  placeholder={
-                    currentField.type === 'tel'
-                      ? 'Ejemplo: 55 1234 5678'
-                      : undefined
-                  }
-                />
-              ) : currentField.type === 'select' ? (
-                <Select
-                  {...register(currentField.id as keyof ContactFormData)}
-                  label={currentField.label}
-                  options={[
-                    { value: 'negocio-local', label: 'Tengo un negocio local' },
-                    { value: 'profesional-independiente', label: 'Soy profesional independiente' },
-                    { value: 'empresa', label: 'Tengo una empresa' },
-                    { value: 'startup', label: 'Tengo una startup' },
-                  ]}
-                  error={errors[currentField.id as keyof ContactFormData]?.message}
-                  fullWidth
-                  placeholder="Selecciona una opción"
-                />
-              ) : (
-                <Textarea
-                  {...register(currentField.id as keyof ContactFormData)}
-                  label={currentField.label}
-                  error={errors[currentField.id as keyof ContactFormData]?.message}
-                  fullWidth
-                  rows={6}
-                  placeholder="Describe brevemente qué necesitas..."
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation Buttons */}
-          <motion.div
-            className="flex gap-4 mt-8"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-          >
-            {!isFirstStep && (
+          {/* Progress */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center text-xs text-gray-500 mb-2">
+              <span>Paso {currentStep + 1} de {steps.length}</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
               <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handlePrevious}
-                  className="flex items-center gap-2"
+                className="h-full bg-gradient-to-r from-accent-dark to-accent rounded-full"
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-white/8 bg-white/3 p-6 md:p-8">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.25 }}
+                  className="mb-8"
                 >
-                  <ChevronLeft className="w-4 h-4" />
-                  Anterior
-                </Button>
-              </motion.div>
-            )}
+                  <h3 className="text-white font-semibold text-lg mb-4">{currentField.label}</h3>
 
-            <div className="flex-1" />
+                  {currentField.type === 'textarea' ? (
+                    <div>
+                      <textarea
+                        {...register(currentField.id as keyof ContactFormData)}
+                        rows={5}
+                        placeholder={currentField.placeholder}
+                        className={`${inputClass} resize-none`}
+                      />
+                      {errors[currentField.id as keyof ContactFormData] && (
+                        <p className="text-red-400 text-xs mt-1.5">{errors[currentField.id as keyof ContactFormData]?.message}</p>
+                      )}
+                    </div>
+                  ) : currentField.type === 'select' ? (
+                    <div>
+                      <select
+                        {...register(currentField.id as keyof ContactFormData)}
+                        className={`${inputClass} appearance-none`}
+                        defaultValue=""
+                      >
+                        <option value="" disabled className="bg-[#111827] text-gray-400">Selecciona una opción</option>
+                        {businessOptions.map((o) => (
+                          <option key={o.value} value={o.value} className="bg-[#111827] text-white">{o.label}</option>
+                        ))}
+                      </select>
+                      {errors[currentField.id as keyof ContactFormData] && (
+                        <p className="text-red-400 text-xs mt-1.5">{errors[currentField.id as keyof ContactFormData]?.message}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        {...register(currentField.id as keyof ContactFormData)}
+                        type={currentField.type}
+                        placeholder={currentField.placeholder}
+                        autoComplete={currentField.type === 'email' ? 'email' : undefined}
+                        className={inputClass}
+                      />
+                      {errors[currentField.id as keyof ContactFormData] && (
+                        <p className="text-red-400 text-xs mt-1.5">{errors[currentField.id as keyof ContactFormData]?.message}</p>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
 
-            {isLastStep ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button type="submit" isLoading={isSubmitting} className="flex items-center gap-2">
-                  Enviar mensaje
-                  <Check className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button type="button" onClick={handleNext} className="flex items-center gap-2">
-                  Siguiente
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            )}
-          </motion.div>
-        </motion.form>
+              {submitError && (
+                <p className="text-red-400 text-sm mb-4">{submitError}</p>
+              )}
+
+              {/* Navigation */}
+              <div className="flex items-center gap-3">
+                {!isFirstStep && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handlePrevious}
+                    className="border border-white/10 text-gray-400 hover:text-white gap-1.5"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Atrás
+                  </Button>
+                )}
+                <div className="flex-1" />
+                {isLastStep ? (
+                  <Button type="submit" isLoading={isSubmitting} className="gap-2">
+                    Enviar mensaje
+                    <Check className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button type="button" onClick={handleNext} className="gap-2">
+                    Siguiente
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </form>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

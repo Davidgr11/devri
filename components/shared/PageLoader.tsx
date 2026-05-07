@@ -29,7 +29,7 @@ export function PageLoader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B0D14]"
         >
           {/* Animated background circles */}
           <div className="absolute inset-0 overflow-hidden">
